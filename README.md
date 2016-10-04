@@ -4,6 +4,8 @@ Some bash scripts that you probably don't need
 
 
 
-**Bashup** manages your local backups
+**bashup** manages your local backups
 
-**GitBak** backs up your repositories
+**gitbak** backs up your repositories
+
+**dwl** manages your downloads
