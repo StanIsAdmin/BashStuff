@@ -41,10 +41,13 @@ done
 
 
 #-----Ask for input
+read -p "Username : " GHBU_UNAME	# the username of a GitHub account (to use with the GitHub API)	
 if [ $USERMODE == "o" ]; then
 	read -p "Organization : " GHBU_ORG	# the GitHub organization/user whose repos will be backed up
+else
+	GHBU_ORG=$GHBU_UNAME
 fi
-read -p "Username : " GHBU_UNAME	# the username of a GitHub account (to use with the GitHub API)		
+	
 read -s -p "Password : " GHBU_PASSWD		# the passsword for that account 
 echo ""
 if [ -z "$GHBU_BACKUP_DIR" ]; then
@@ -63,7 +66,7 @@ GHBU_PRUNE_OLD=${GHBU_PRUNE_OLD-true}					# when true, old backups will be delet
 GHBU_PRUNE_AFTER_N_DAYS=${GHBU_PRUNE_AFTER_N_DAYS-3}	# the min age (in days) of backup files to delete
 GHBU_SILENT=${GHBU_SILENT-false}						# when true, only show error messages 
 GHBU_API=${GHBU_API-"https://api.github.com"}			# base URI for the GitHub API
-GHBU_GIT_CLONE_CMD="git clone --quiet --mirror git@${GHBU_GITHOST}:"	# base command to use to clone GitHub repos
+GHBU_GIT_CLONE_CMD="git clone --quiet --mirror https://${GHBU_UNAME}:${GHBU_PASSWD}@${GHBU_GITHOST}"	# base command to use to clone GitHub repos
 TSTAMP=`date "+%Y%m%d-%H%M"`
 
 
@@ -107,16 +110,16 @@ $GHBU_SILENT || (echo "" && echo "--- BACKING UP ---" && echo "")
 
 for REPO in $REPOLIST; do
    $GHBU_SILENT || echo "Backing up ${GHBU_ORG}/${REPO}"
-   check ${GHBU_GIT_CLONE_CMD}${GHBU_ORG}/${REPO}.git ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}-${TSTAMP}.git && tgz ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}-${TSTAMP}.git
+   check ${GHBU_GIT_CLONE_CMD}/${GHBU_ORG}/${REPO}.git ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}-${TSTAMP}.git && tgz ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}-${TSTAMP}.git >/dev/null 2>&1
 
    $GHBU_SILENT || echo "Backing up ${GHBU_ORG}/${REPO}.wiki (if any)"
-   ${GHBU_GIT_CLONE_CMD}${GHBU_ORG}/${REPO}.wiki.git ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}.wiki-${TSTAMP}.git 2>/dev/null && tgz ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}.wiki-${TSTAMP}.git
+   ${GHBU_GIT_CLONE_CMD}/${GHBU_ORG}/${REPO}.wiki.git ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}.wiki-${TSTAMP}.git 2>/dev/null && tgz ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}.wiki-${TSTAMP}.git >/dev/null 2>&1
 
    $GHBU_SILENT || echo "Backing up ${GHBU_ORG}/${REPO} issues"
-   check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/repos/${GHBU_ORG}/${REPO}/issues -q > ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}.issues-${TSTAMP} && tgz ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}.issues-${TSTAMP}
+   check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/repos/${GHBU_ORG}/${REPO}/issues -q > ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}.issues-${TSTAMP} && tgz ${GHBU_BACKUP_DIR}/${GHBU_ORG}-${REPO}.issues-${TSTAMP} >/dev/null 2>&1
 done
 
-if $GHBU_PRUNE_OLD; then
+if $GHBU_PRUNE_OLD ; then
   $GHBU_SILENT || (echo "" && echo "--- PRUNING ---" && echo "")
   $GHBU_SILENT || echo "Pruning backup files ${GHBU_PRUNE_AFTER_N_DAYS} days old or older."
   $GHBU_SILENT || echo "Found `find $GHBU_BACKUP_DIR -name '*.tar.gz' -mtime +$GHBU_PRUNE_AFTER_N_DAYS | wc -l` files to prune."
