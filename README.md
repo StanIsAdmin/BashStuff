@@ -1,6 +1,8 @@
-# Scripts
-Some scripts that you probably don't need
-
+# Code
+Some scripts you probably don't need
+Some libraries you probably won't import
+Some sources you probably won't compile
+Code is beautiful
 
 
 
