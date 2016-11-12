@@ -21,3 +21,5 @@ Code is beautiful
 
 ## python
 **fileHash** allows you to manage files thanks to their md5 hexdigests
+
+**fractal** creates images of fractals from affine coordinate transformations with given probability distributions
