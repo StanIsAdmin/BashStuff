@@ -1,15 +1,22 @@
 from numpy import random, arange
 from PIL import Image
 
-def getFractalSeries(n, transform, frequencies=None):
+common = {
+	"dragon-curve" : ([(0.5, -0.5, 0, 0.5, 0.5, 0), (0.5, -0.5, 1, 0.5, 0.5, 0)], None), \
+	"barnsley-fern" : ([(0, 0, 0, 0, .16, 0), (.85, .04, 0, -0.04, .85, 1.6), \
+		(0.2, -0.26, 0, 0.23, 0.22, 1.6), (-0.15, 0.28, 0, 0.26, 0.24, 0.44)], \
+		(.01, .85, .07, .07))
+}
+
+def getFractalSeries(n, transform, probabilities=None):
 	x = 0.0
 	y = 0.0
 	xValues, yValues = [x], [y]
 	rand = []
-	if frequencies is None:
-		rand = random.choice(arange(len(frequencies)), size=n)
+	if probabilities is None:
+		rand = random.choice(arange(len(transform)), size=n)
 	else:
-		rand = random.choice(arange(len(frequencies)), size=n, p=[f/sum(frequencies) for f in frequencies])
+		rand = random.choice(arange(len(transform)), size=n, p=probabilities)
 
 	for i in range (n):
 		r = rand[i]
@@ -53,13 +60,6 @@ def makeImage(xValues, yValues, width=1920, height=1080):
 	img.show()
 	img.save("Fractal.png")
 
-#Dragon curve
-#transform = [(0.5, -0.5, 0, 0.5, 0.5, 0), (0.5, -0.5, 1, 0.5, 0.5, 0)] #dragon
 
-#Barnsley fern
-transform = [(0, 0, 0, 0, .16, 0), (.85, .04, 0, -0.04, .85, 1.6), \
-	(0.2, -0.26, 0, 0.23, 0.22, 1.6), (-0.15, 0.28, 0, 0.26, 0.24, 0.44)] #leaf
-frequencies = (1, 85, 7, 7)
-
-xValues, yValues = getFractalSeries(1000000, transform, frequencies)
-makeImage(yValues, xValues)
+xValues, yValues = getFractalSeries(500000, *common["dragon-curve"])
+makeImage(xValues, yValues)
