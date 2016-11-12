@@ -7,7 +7,10 @@ Some sources you probably won't compile
 
 Code is beautiful
 
+## asm
+` nasm -f elf64 name.asm && gcc name.o -o name && ./name `
 
+**fibonacci** calculates the nth value of the fibonacci series for two given initial values
 
 ## bash
 **bashup** manages your local backups
