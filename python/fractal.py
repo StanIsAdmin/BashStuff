@@ -32,7 +32,7 @@ def getFractalSeries(n, transform, probabilities=None):
 	
 	return xValues, yValues
 	
-def makeImage(xValues, yValues, width=1920, height=1080):
+def makeImage(name, xValues, yValues, width=1920, height=1080):
 	width -= 1
 	height -= 1
 	maxX, maxY = max(xValues), max(yValues)
@@ -58,8 +58,8 @@ def makeImage(xValues, yValues, width=1920, height=1080):
 		pixels[x, y] = int(x*xColor), int(y*yColor), int((x*y)*zColor)
 
 	img.show()
-	img.save("Fractal.png")
+	img.save(name + ".png")
 
-
-xValues, yValues = getFractalSeries(500000, *common["dragon-curve"])
-makeImage(xValues, yValues)
+name = "dragon-curve"
+xValues, yValues = getFractalSeries(500000, *common[name])
+makeImage(name, xValues, yValues)
