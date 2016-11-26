@@ -34,13 +34,11 @@ CPPFLAGS += -std=c++11 -Wall -Wextra
 LDFLAGS += 
 
 
-# - - - - - FILE LOOKUP - - - - -
-ifdef ComSpec
-    
-else
-    
-endif 
-# Path manipulation for Windows systems
+# - - - - - CROSS PLATFORM - - - - -
+
+# PATHSEP is the path separator
+# RM is them remove command used by the clean target
+# END is the file extension of the executable file
 ifdef ComSpec
   PATHSEP=\\
   RM=del /F /Q
@@ -51,6 +49,8 @@ else
   END=
 endif
 
+
+# - - - - - FILE LOOKUP - - - - -
 
 # List of all files in the src/ directory ending in ".c"
 program_C_SRCS := $(wildcard $(program_SOURCE_DIR)/*.c)

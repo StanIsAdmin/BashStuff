@@ -6,12 +6,6 @@
 
 # - - - - - VARIABLES - - - - -
 
-# CPPFLAGS is the C preprocessor flags, so anything that compiles a C or C++ source file into an object file will use these flags
-CPPFLAGS += -std=c++11 -Wpedantic -Wall -Wextra -Winit-self -Winline -Wconversion -Weffc++ -Wstrict-null-sentinel -Wold-style-cast -Wnoexcept -Wctor-dtor-privacy -Woverloaded-virtual -Wconversion -Wsign-promo -Wzero-as-null-pointer-constant 
-
-# LDFLAGS are used when linking
-LDFLAGS += 
-
 # Name of the program
 program_NAME := polynomial
 
@@ -33,14 +27,18 @@ program_BIN_DIR := bin
 # If true, will output all used variables
 debugging := false
 
+# CPPFLAGS is the C preprocessor flags, so anything that compiles a C or C++ source file into an object file will use these flags
+CPPFLAGS += -std=c++11 -Wpedantic -Wall -Wextra -Winit-self -Winline -Wconversion -Weffc++ -Wstrict-null-sentinel -Wold-style-cast -Wnoexcept -Wctor-dtor-privacy -Woverloaded-virtual -Wconversion -Wsign-promo -Wzero-as-null-pointer-constant 
 
-# - - - - - FILE LOOKUP - - - - -
-ifdef ComSpec
-    
-else
-    
-endif 
-# Path manipulation for Windows systems
+# LDFLAGS are used when linking
+LDFLAGS += 
+
+
+# - - - - - CROSS PLATFORM - - - - -
+
+# PATHSEP is the path separator
+# RM is them remove command used by the clean target
+# END is the file extension of the executable file
 ifdef ComSpec
   PATHSEP=\\
   RM=del /F /Q
@@ -51,6 +49,8 @@ else
   END=
 endif
 
+
+# - - - - - FILE LOOKUP - - - - -
 
 # List of all files in the src/ directory ending in ".c"
 program_C_SRCS := $(wildcard $(program_SOURCE_DIR)/*.c)
