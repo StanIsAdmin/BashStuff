@@ -1,14 +1,10 @@
 # Makefile adapted from:
 # https://sites.google.com/site/michaelsafyan/software-engineering/how-to-write-a-makefile
+# Help for cross-platform usage from:
+# http://skramm.blogspot.be/2013/04/writing-portable-makefiles.html
 
 
 # - - - - - VARIABLES - - - - -
-
-# CPPFLAGS is the C preprocessor flags, so anything that compiles a C or C++ source file into an object file will use these flags
-CPPFLAGS += -std=c++11 -Wall -Wextra
-
-# LDFLAGS are used when linking
-LDFLAGS += 
 
 # Name of the program
 program_NAME := uinter
@@ -26,13 +22,35 @@ program_LIBRARY_DIRS :=
 program_LIBRARIES :=
 
 # Binary files will be written to this directory
-program_BIN_DIR := ./bin
+program_BIN_DIR := bin
 
 # If true, will output all used variables
 debugging := false
 
+# CPPFLAGS is the C preprocessor flags, so anything that compiles a C or C++ source file into an object file will use these flags
+CPPFLAGS += -std=c++11 -Wall -Wextra
+
+# LDFLAGS are used when linking
+LDFLAGS += 
+
 
 # - - - - - FILE LOOKUP - - - - -
+ifdef ComSpec
+    
+else
+    
+endif 
+# Path manipulation for Windows systems
+ifdef ComSpec
+  PATHSEP=\\
+  RM=del /F /Q
+  END=.exe
+else
+  PATHSEP=/
+  RM=rm -f
+  END=
+endif
+
 
 # List of all files in the src/ directory ending in ".c"
 program_C_SRCS := $(wildcard $(program_SOURCE_DIR)/*.c)
@@ -41,11 +59,10 @@ program_C_SRCS := $(wildcard $(program_SOURCE_DIR)/*.c)
 program_CXX_SRCS := $(wildcard $(program_SOURCE_DIR)/*.cpp)
 
 # Names all C object files that we are going to build (substitution expression)
-program_C_OBJS := $(patsubst %.c,%.o,$(program_C_SRCS))
-
+program_C_OBJS := $(patsubst $(program_SOURCE_DIR)/%.c,$(program_SOURCE_DIR)$(PATHSEP)%.o,$(program_C_SRCS))
 
 # Names all C++ object files that we are going to build
-program_CXX_OBJS := $(patsubst %.cpp,%.o,$(program_CXX_SRCS))
+program_CXX_OBJS := $(patsubst $(program_SOURCE_DIR)/%.cpp,$(program_SOURCE_DIR)$(PATHSEP)%.o,$(program_CXX_SRCS))
 
 # List of all the ".o" files, both from C and C++ source files
 program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
@@ -85,13 +102,13 @@ all: $(program_NAME)
 # The program depends on the object files
 # The build rule $(LINK.cc) is used to link the object files and output a file with the same name as the program. LINK.cc makes use of CXX,CXXFLAGS, LDFLAGS, etc.
 $(program_NAME): $(program_OBJS)
-	$(LINK.cc) $(program_OBJS) -o $(program_BIN_DIR)/$(program_NAME)
+	$(LINK.cc) $(program_OBJS) -o $(program_BIN_DIR)$(PATHSEP)$(program_NAME)
 
 
 # This target removes the built program and the generated object files. 
 # The @ symbol indicates that the line should be run silently, and the - symbol indicates that errors should be ignored
 clean:
-	@- $(RM) $(program_BIN_DIR)/$(program_NAME)
+	@- $(RM) $(program_BIN_DIR)$(PATHSEP)$(program_NAME)$(END)
 	@- $(RM) $(program_OBJS)
 
 
