@@ -1,11 +1,99 @@
-#Compiler options
-FLAGS = -std=c++11 -Wall -Wextra
+# Makefile adapted from:
+# https://sites.google.com/site/michaelsafyan/software-engineering/how-to-write-a-makefile
 
-all: uinter
 
-uinter: uinter.cpp
-	mkdir -p bin
-	g++ $(FLAGS) uinter.cpp -o bin/uinter
-	
+# - - - - - VARIABLES - - - - -
+
+# CPPFLAGS is the C preprocessor flags, so anything that compiles a C or C++ source file into an object file will use these flags
+CPPFLAGS += -std=c++11 -Wall -Wextra
+
+# LDFLAGS are used when linking
+LDFLAGS += 
+
+# Name of the program
+program_NAME := uinter
+
+# Source files will be looked for in this directory
+program_SOURCE_DIR := .
+
+# Headers in these directories will be found with #include <>
+program_INCLUDE_DIRS :=
+
+# Libraries in these directories will be found by the linker
+program_LIBRARY_DIRS :=
+
+# Libraries with these names will be linked in
+program_LIBRARIES :=
+
+# Binary files will be written to this directory
+program_BIN_DIR := ./bin
+
+# If true, will output all used variables
+debugging := false
+
+
+# - - - - - FILE LOOKUP - - - - -
+
+# List of all files in the src/ directory ending in ".c"
+program_C_SRCS := $(wildcard $(program_SOURCE_DIR)/*.c)
+
+# List of all files in the src/ directory ending in ".cpp"
+program_CXX_SRCS := $(wildcard $(program_SOURCE_DIR)/*.cpp)
+
+# Names all C object files that we are going to build (substitution expression)
+program_C_OBJS := $(patsubst %.c,%.o,$(program_C_SRCS))
+
+
+# Names all C++ object files that we are going to build
+program_CXX_OBJS := $(patsubst %.cpp,%.o,$(program_CXX_SRCS))
+
+# List of all the ".o" files, both from C and C++ source files
+program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
+
+# Add I$(includedir) for every include directory given in $(program_INCLUDE_DIRS)
+CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
+
+# Add -L$(librarydir) for every library directory given in $(program_LIBRARY_DIRS)
+LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
+
+# Add -l$(library) for every library given in $(program_LIBRARIES)
+LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
+
+
+# - - - - - DEBUGGING - - - - -
+ifeq ($(debugging),true)
+$(info $$program_C_SRCS   is [${program_C_SRCS}])
+$(info $$program_CXX_SRCS is [${program_CXX_SRCS}])
+$(info $$program_CXX_OBJS is [${program_CXX_OBJS}])
+$(info $$program_C_OBJS   is [${program_C_OBJS}])
+$(info $$program_OBJS     is [${program_OBJS}])
+$(info $$CPPFLAGS is [${CPPFLAGS}])
+$(info $$LDFLAGS  is [${LDFLAGS}])
+endif
+
+
+# - - - - - COMPILATION - - - - -
+
+# Phony targets execute their build rules, even if a file with the same name exists
+.PHONY: all clean distclean
+
+
+# First build rule in the makefile is the default (when executing "make")
+all: $(program_NAME)
+
+
+# The program depends on the object files
+# The build rule $(LINK.cc) is used to link the object files and output a file with the same name as the program. LINK.cc makes use of CXX,CXXFLAGS, LDFLAGS, etc.
+$(program_NAME): $(program_OBJS)
+	$(LINK.cc) $(program_OBJS) -o $(program_BIN_DIR)/$(program_NAME)
+
+
+# This target removes the built program and the generated object files. 
+# The @ symbol indicates that the line should be run silently, and the - symbol indicates that errors should be ignored
 clean:
-	rm bin/uinter
+	@- $(RM) $(program_BIN_DIR)/$(program_NAME)
+	@- $(RM) $(program_OBJS)
+
+
+# The distclean target depends on the clean target (so executing distclean will cause clean to be executed), but it also removes configuration files
+distclean: clean
