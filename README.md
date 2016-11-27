@@ -20,6 +20,8 @@ Some say code is beautiful
 **dwl** manages your downloads
 
 ## cpp  
+**polynomial** is a set of classes representing vectors, polynomials, and polynomials modulus allowing polynomial arithmetic
+
 **uinter** represents a list of intervals with no intersection
 
 ## python
