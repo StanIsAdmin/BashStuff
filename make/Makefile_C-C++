@@ -1,7 +1,11 @@
-# Makefile adapted from:
+# GNU Makefile adapted from:
 # https://sites.google.com/site/michaelsafyan/software-engineering/how-to-write-a-makefile
 # Help for cross-platform usage from:
 # http://skramm.blogspot.be/2013/04/writing-portable-makefiles.html
+# More on implicit variables:
+# https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+# More on automatic variables:
+# https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
 
 
 # - - - - - VARIABLES - - - - -
@@ -27,8 +31,11 @@ program_BIN_DIR :=
 # If true, will output all used variables
 debugging := false
 
-# CPPFLAGS is the C preprocessor flags, so anything that compiles a C or C++ source file into an object file will use these flags
+# CPPFLAGS are extra flags to give to the C preprocessor and programs that use it (like the C compiler)
 CPPFLAGS += -std=c++11 -Wpedantic -Wall -Wextra -Winit-self -Winline -Wconversion -Weffc++ -Wstrict-null-sentinel -Wold-style-cast -Wnoexcept -Wctor-dtor-privacy -Woverloaded-virtual -Wconversion -Wsign-promo -Wzero-as-null-pointer-constant 
+
+# CXXFLAGS are extra flags to give to the C++ compiler
+CXXFLAGS +=
 
 # LDFLAGS are used when linking
 LDFLAGS += 
@@ -100,7 +107,8 @@ all: $(program_NAME)
 
 
 # The program depends on the object files
-# The build rule $(LINK.cc) is used to link the object files and output a file with the same name as the program. LINK.cc makes use of CXX,CXXFLAGS, LDFLAGS, etc.
+# The build rule $(LINK.cc) is used to link the object files and output a file with the same name as the program. LINK.cc makes use of CXX,CXXFLAGS,CPPFLAGS,LDFLAGS,TARGET_ARCH.
+# For more info on LINK, do 'make -p | grep LINK'
 $(program_NAME): $(program_OBJS)
 	$(LINK.cc) $(program_OBJS) -o $(program_BIN_DIR)/$(program_NAME)
 
