@@ -7,10 +7,10 @@
 # - - - - - VARIABLES - - - - -
 
 # Name of the program
-program_NAME := uinter
+program_NAME :=
 
 # Source files will be looked for in this directory
-program_SOURCE_DIR := .
+program_SOURCE_DIR :=
 
 # Headers in these directories will be found with #include <>
 program_INCLUDE_DIRS :=
@@ -22,13 +22,13 @@ program_LIBRARY_DIRS :=
 program_LIBRARIES :=
 
 # Binary files will be written to this directory
-program_BIN_DIR := bin
+program_BIN_DIR :=
 
 # If true, will output all used variables
 debugging := false
 
 # CPPFLAGS is the C preprocessor flags, so anything that compiles a C or C++ source file into an object file will use these flags
-CPPFLAGS += -std=c++11 -Wall -Wextra
+CPPFLAGS += -std=c++11 -Wpedantic -Wall -Wextra -Winit-self -Winline -Wconversion -Weffc++ -Wstrict-null-sentinel -Wold-style-cast -Wnoexcept -Wctor-dtor-privacy -Woverloaded-virtual -Wconversion -Wsign-promo -Wzero-as-null-pointer-constant 
 
 # LDFLAGS are used when linking
 LDFLAGS += 
@@ -102,7 +102,7 @@ all: $(program_NAME)
 # The program depends on the object files
 # The build rule $(LINK.cc) is used to link the object files and output a file with the same name as the program. LINK.cc makes use of CXX,CXXFLAGS, LDFLAGS, etc.
 $(program_NAME): $(program_OBJS)
-	$(LINK.cc) $(program_OBJS) -o $(program_BIN_DIR)$(PATHSEP)$(program_NAME)
+	$(LINK.cc) $(program_OBJS) -o $(program_BIN_DIR)/$(program_NAME)
 
 
 # This target removes the built program and the generated object files. 
