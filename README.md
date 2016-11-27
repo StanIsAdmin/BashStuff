@@ -24,6 +24,12 @@ Some say code is beautiful
 
 **uinter** represents a list of intervals with no intersection
 
+## java  
+**mergesort** is a multithreaded implementation of the mergesort algorithm
+
+## make  
+**Makefile_C-C++** is the Makefile I use to compile the cpp projects 
+
 ## python
 **fileHash** allows you to manage files thanks to their md5 hexdigests
 
