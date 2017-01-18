@@ -1,11 +1,13 @@
 # Code
-Some scripts you probably don't need
+Scripts you won't run  
+Libraries you won't import  
+Sources you won't compile  
+Just because  
 
-Some libraries you probably won't import
-
-Some sources you probably won't compile
-
-Some say code is beautiful
+Roses are red  
+Violets are blue  
+Don't fork this rep  
+It won't work for you  
 
 ## asm
 ` nasm -f elf64 name.asm && gcc name.o -o name && ./name `
