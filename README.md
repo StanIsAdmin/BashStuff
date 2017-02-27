@@ -33,6 +33,8 @@ It won't work for you
 **Makefile_C-C++** is the Makefile I use to compile the cpp projects 
 
 ## python
+**cursePad** is a pad that allows multiple cursors to be used to edit a single text document
+
 **fileHash** allows you to manage files thanks to their md5 hexdigests
 
 **fractal** creates images of fractals from affine coordinate transformations with given probability distributions
