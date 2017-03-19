@@ -42,19 +42,18 @@ class Pad:
 	Represents a text area with any number of cursors located on different lines.
 	Modifications of the text may be submitted along with a cursor identification as long as the cursor selection/position has been accepted.
 	"""
-	def __init__(self, file_path):
+	def __init__(self, text):
 		self.file_path = file_path
 		
 		#Read initial content from file to a line list
-		with open(file_path, 'r') as f:
-			self.lines = list(f)
+		self.lines = list(text)
+		
+		self.content_as_string = "" #Whole content concatenated into one string
+		self.content_was_modified = True #Was the content modified since the last concat ?
 		
 		#Cursor dict and value used for default cursor ids
 		self.cursors = {}
 		self.new_cursor_id = -1
-		
-		self.content_as_string = "" #Whole content concatenated into one string
-		self.content_was_modified = True #Was the content modified since the last concat ?
 		
 	def _char_to_row_col(self, char_count):
 		"""
@@ -294,14 +293,11 @@ class Pad:
 		
 	def printCursorPositions(self):
 		for id, cur in self.cursors.items():
-			print(id, cur.row, cur.col)
+			print("Cursor n°", id, "row", cur.row, "col", cur.col, "pos", )
 
 	def __repr__(self):
 		if self.content_was_modified:
 			self.content_was_modified = False
 			self.content_as_string = ''.join(self.lines)
 		return self.content_as_string
-		
-	def file_flush(self):
-		with open(self.file_path, 'w') as f:
-			f.writelines(str(l) for l in self.lines)
+
