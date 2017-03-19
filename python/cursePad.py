@@ -42,14 +42,12 @@ class Pad:
 	Represents a text area with any number of cursors located on different lines.
 	Modifications of the text may be submitted along with a cursor identification as long as the cursor selection/position has been accepted.
 	"""
-	def __init__(self, text):
-		self.file_path = file_path
+	def __init__(self, text):		
+		self.content_as_string = text #Whole content concatenated into one string
+		self.content_was_modified = False #Was the content modified since the last concat ?
 		
 		#Read initial content from file to a line list
-		self.lines = list(text)
-		
-		self.content_as_string = "" #Whole content concatenated into one string
-		self.content_was_modified = True #Was the content modified since the last concat ?
+		self.lines = text.splitlines(keepends=True)
 		
 		#Cursor dict and value used for default cursor ids
 		self.cursors = {}
@@ -67,7 +65,7 @@ class Pad:
 			
 			#If offset is located in this line, adjust column
 			#(last line does not end in \n character, therefore cursor may go as far as last col)
-			if char_count < line_cols or row == len(self.lines) - 1:
+			if char_count < line_cols or (char_count == line_cols and row == len(self.lines) - 1):
 				col = char_count
 				char_count = 0
 			#If offset continues further, increment row and adjust column
@@ -86,6 +84,7 @@ class Pad:
 		
 		while row > 0:
 			char += len(self.lines[row])
+			row -= 1
 		
 		return char + col
 		
@@ -304,7 +303,8 @@ class Pad:
 		
 	def printCursorPositions(self):
 		for id, cur in self.cursors.items():
-			print("Cursor n°", id, "row", cur.row, "col", cur.col, "pos", )
+			pos = self._row_col_to_char(cur.row, cur.col)
+			print("Cursor n°", id, "row", cur.row, "col", cur.col, "pos", pos)
 
 	def __repr__(self):
 		if self.content_was_modified:
