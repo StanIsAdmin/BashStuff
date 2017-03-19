@@ -275,22 +275,22 @@ class Pad:
 					backspace_stop = True
 		
 		#Row and column offsets after the deletion
-		del_rows = current_row - del_start_row
-		del_cols = len(self.lines[del_start_row]) - current_col
+		rows_offset = current_row - del_start_row
+		cols_offset = del_start_col - current_col
 		
 		for cur in self._get_all_cursors():
 			if cur.row > current_row:
-				cur.row -= del_rows
+				cur.row -= rows_offset
 			elif cur.row >= current_row and cur.col >= current_col:
-				cur.row -= del_rows
-				cur.col += del_cols
+				cur.row -= rows_offset
+				cur.col += cols_offset
 				
 		first_line = self.lines[del_start_row]
 		last_line = self.lines[current_row]
 		self.lines[del_start_row] = first_line[0:del_start_col] + last_line[current_col:]
 		
-		for i in range(1, del_rows+1):
-			del self.lines[del_start_row + i]
+		for i in range(1, rows_offset+1):
+			del self.lines[del_start_row + 1]
 		
 	def printCursorPositions(self):
 		for id, cur in self.cursors.items():
