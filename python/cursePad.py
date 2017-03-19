@@ -78,6 +78,17 @@ class Pad:
 		
 		return row, col
 		
+	def _row_col_to_char(self, row, col):
+		"""
+		Translates a (row, col) position into a char offset from file beginning.
+		"""
+		char = 0
+		
+		while row > 0:
+			char += len(self.lines[row])
+		
+		return char + col
+		
 	def _get_cursor_from_id(self, cursor_id):
 		try:
 			return self.cursors[cursor_id]
