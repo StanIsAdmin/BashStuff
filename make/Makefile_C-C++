@@ -47,13 +47,13 @@ LDFLAGS +=
 # RM is them remove command used by the clean target
 # END is the file extension of the executable file
 ifdef ComSpec
-  PATHSEP=\\
-  RM=del /F /Q
-  END=.exe
+	PATHSEP=\\
+	RM=del /F /Q
+	END=.exe
 else
-  PATHSEP=/
-  RM=rm -f
-  END=
+	PATHSEP=/
+	RM=rm -f
+	END=
 endif
 
 
@@ -86,13 +86,13 @@ LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
 
 # - - - - - DEBUGGING - - - - -
 ifeq ($(debugging),true)
-$(info $$program_C_SRCS   is [${program_C_SRCS}])
-$(info $$program_CXX_SRCS is [${program_CXX_SRCS}])
-$(info $$program_CXX_OBJS is [${program_CXX_OBJS}])
-$(info $$program_C_OBJS   is [${program_C_OBJS}])
-$(info $$program_OBJS     is [${program_OBJS}])
-$(info $$CPPFLAGS is [${CPPFLAGS}])
-$(info $$LDFLAGS  is [${LDFLAGS}])
+	$(info $$program_C_SRCS   is [${program_C_SRCS}])
+	$(info $$program_CXX_SRCS is [${program_CXX_SRCS}])
+	$(info $$program_CXX_OBJS is [${program_CXX_OBJS}])
+	$(info $$program_C_OBJS   is [${program_C_OBJS}])
+	$(info $$program_OBJS     is [${program_OBJS}])
+	$(info $$CPPFLAGS is [${CPPFLAGS}])
+	$(info $$LDFLAGS  is [${LDFLAGS}])
 endif
 
 
@@ -105,6 +105,15 @@ endif
 # First build rule in the makefile is the default (when executing "make")
 all: $(program_NAME)
 
+
+# In debug versions, use the -g option to provide debugging information
+debug: CPPFLAGS += -g
+debug: $(program_NAME)
+
+
+# In released versions, disable asserts and optimize as much as possible
+release: CPPFLAGS += -DNDEBUG -O3
+release: $(program_NAME)
 
 # The program depends on the object files
 # The build rule $(LINK.cc) is used to link the object files and output a file with the same name as the program. LINK.cc makes use of CXX,CXXFLAGS,CPPFLAGS,LDFLAGS,TARGET_ARCH.
