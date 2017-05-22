@@ -9,22 +9,17 @@ Violets are blue
 Don't fork this rep  
 It won't work for you  
 
-## asm
+## asm  
 ` nasm -f elf64 name.asm && gcc name.o -o name && ./name `
 
 **fibonacci** calculates the nth value of the fibonacci series for two given initial values
 
-## bash
+## bash  
 **bashup** manages your local backups
 
 **gitbak** backs up your repositories
 
 **dwl** manages your downloads
-
-## cpp  
-**polynomial** is a set of classes representing vectors, polynomials, and polynomials modulus allowing polynomial arithmetic
-
-**uinter** represents a list of intervals with no intersection
 
 ## java  
 **mergesort** is a multithreaded implementation of the mergesort algorithm
@@ -32,9 +27,7 @@ It won't work for you
 ## make  
 **Makefile_C-C++** is the Makefile I use to compile the cpp projects 
 
-## python
-**cursePad** is a pad that allows multiple cursors to be used to edit a single text document
-
+## python  
 **fileHash** allows you to manage files thanks to their md5 hexdigests
 
 **fractal** creates images of fractals from affine coordinate transformations with given probability distributions
