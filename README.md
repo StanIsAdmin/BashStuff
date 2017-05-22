@@ -21,6 +21,9 @@ It won't work for you
 
 **dwl** manages your downloads
 
+## c  
+**client-server** is a basic skeleton for client/server projects
+
 ## gmpl  
 **transport** optimizes transportation of products to meet demands in time
 
