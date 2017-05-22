@@ -31,6 +31,6 @@ It won't work for you
 **makefile-c-c++** is the Makefile I use to compile the cpp projects 
 
 ## python  
-**fileHash** allows you to manage files thanks to their md5 hexdigests
+**filehash** allows you to manage files thanks to their md5 hexdigests
 
 **fractal** creates images of fractals from affine coordinate transformations with given probability distributions
