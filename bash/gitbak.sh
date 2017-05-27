@@ -1,20 +1,23 @@
 #!/bin/bash 
+# GitHub backup bash utility
+#
 # DISCLAIMER : original script came from https://gist.github.com/rodw/3073987
-# This version was modified to backup either a User or an Organization's repos
+# This version was modified to backup either a User or an Organization's repositories
 
-# NOTE: if you have more than 100 repositories, you'll need to step thru the list of repos 
+# NOTE: if you have more than 100 repositories, you'll need to step through the list of repos 
 # returned by GitHub one page at a time, as described at https://gist.github.com/darktim/5582423
 
 
-#-----Read arguments
+# ----- Read arguments -----
+
 while [[ $# -gt 1 ]]
 do
 	key="$1"
-
+	
 	case $key in
 		-u|--usermode)		#usermode (organization or user)
 		USERMODE="$2"
-		if [[ $USERMODE != [ou] ]]; then
+		if [[ "$USERMODE" != [ou] ]]; then
 			echo "usermode must be 'o' (organization) or 'u' (user)"
 			exit
 		fi
@@ -22,8 +25,9 @@ do
 		;;
 		-d|--backupdir)		#backup directory
 		GHBU_BACKUP_DIR="$2"
-		if [ ! -d $GHBU_BACKUP_DIR ]; then
-			echo "backup directory not valid"
+		mkdir -p $GHBU_BACKUP_DIR
+		if [ ! -d "$GHBU_BACKUP_DIR" ]; then
+			echo "backup directory ${GHBU_BACKUP_DIR} is not valid"
 			exit
 		fi
 		shift
@@ -34,15 +38,12 @@ do
 	esac
 	shift # past argument or value
 done
-#if [[ -n $1 ]]; then
-#    echo "Last line of file specified as non-opt/last argument:"
-#    tail -1 $1
-#fi
 
 
-#-----Ask for input
+# -----Ask for input -----
+
 read -p "Username : " GHBU_UNAME	# the username of a GitHub account (to use with the GitHub API)	
-if [ $USERMODE == "o" ]; then
+if [ "$USERMODE" == "o" ]; then
 	read -p "Organization : " GHBU_ORG	# the GitHub organization/user whose repos will be backed up
 else
 	GHBU_ORG=$GHBU_UNAME
@@ -50,20 +51,24 @@ fi
 	
 read -s -p "Password : " GHBU_PASSWD		# the passsword for that account 
 echo ""
+
 if [ -z "$GHBU_BACKUP_DIR" ]; then
 	read -p "Backup directory : " GHBU_BACKUP_DIR	# the backup directory
-	while [ ! -d $GHBU_BACKUP_DIR ]
+	mkdir -p $GHBU_BACKUP_DIR
+	while [ ! -d "$GHBU_BACKUP_DIR" ]
 	do
 		echo "Not a directory!"
 		read -p "Backup directory : " GHBU_BACKUP_DIR
+		mkdir -p $GHBU_BACKUP_DIR
 	done
 fi
 
 
-#-----Define other variables
+# -----Define other variables -----
+
 GHBU_GITHOST=${GHBU_GITHOST-"github.com"}				# the GitHub hostname (see comments)
 GHBU_PRUNE_OLD=${GHBU_PRUNE_OLD-true}					# when true, old backups will be deleted
-GHBU_PRUNE_AFTER_N_DAYS=${GHBU_PRUNE_AFTER_N_DAYS-3}	# the min age (in days) of backup files to delete
+GHBU_PRUNE_AFTER_N_DAYS=${GHBU_PRUNE_AFTER_N_DAYS-0}	# the min age (in days) of backup files to delete
 GHBU_SILENT=${GHBU_SILENT-false}						# when true, only show error messages 
 GHBU_API=${GHBU_API-"https://api.github.com"}			# base URI for the GitHub API
 GHBU_GIT_CLONE_CMD="git clone --quiet --mirror https://${GHBU_UNAME}:${GHBU_PASSWD}@${GHBU_GITHOST}"	# base command to use to clone GitHub repos
@@ -95,7 +100,7 @@ check mkdir -p $GHBU_BACKUP_DIR
 
 $GHBU_SILENT || echo -n "Fetching list of repositories for ${GHBU_ORG}..."
 
-if [ $USERMODE == "o" ]; then
+if [ "$USERMODE" == "o" ]; then
 	# Repo list for organization
 	REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/orgs/${GHBU_ORG}/repos\?per_page=100 -q | check grep "\"name\"" | check awk -F': "' '{print $2}' | check sed -e 's/",//g'`
 else
