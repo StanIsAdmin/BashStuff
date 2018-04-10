@@ -102,14 +102,14 @@ $GHBU_SILENT || echo -n "Fetching list of repositories for ${GHBU_ORG}..."
 
 if [ "$USERMODE" == "o" ]; then
 	# Repo list for organization
-	REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/orgs/${GHBU_ORG}/repos\?per_page=100 -q | check grep "\"name\"" | check awk -F': "' '{print $2}' | check sed -e 's/",//g'`
+	REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/orgs/${GHBU_ORG}/repos\?per_page=100 -q | check grep "\"full_name\"" | check awk -F'/' '{print $2}' | check sed -e 's/",//g'`
 else
 	# Repo list for user
 	# NOTE: added affiliation=owner option to backup only my own repos
-	REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/user/repos\?affiliation=owner -q | check grep "\"name\"" | check awk -F': "' '{print $2}' | check sed -e 's/",//g'`	
+	REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/user/repos\?affiliation=owner -q | check grep "\"full_name\"" | check awk -F'/' '{print $2}' | check sed -e 's/",//g'`	
 fi
 
-
+echo $REPOLIST
 $GHBU_SILENT || echo "found `echo $REPOLIST | wc -w` repositories."
 $GHBU_SILENT || (echo "" && echo "--- BACKING UP ---" && echo "")
 
